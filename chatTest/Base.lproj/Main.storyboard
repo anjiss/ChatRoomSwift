@@ -227,26 +227,35 @@
                                     <action selector="leaveRoom:" destination="AFr-EA-bhB" eventType="touchUpInside" id="br7-yR-lEa"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aG0-Lz-1XL">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <state key="normal" title="Update"/>
+                                <connections>
+                                    <action selector="updateBut:" destination="AFr-EA-bhB" eventType="touchUpInside" id="OIj-Eg-VU2"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="TkB-uh-vrg" secondAttribute="trailing" id="0hg-w1-tkF"/>
-                            <constraint firstItem="TkB-uh-vrg" firstAttribute="top" secondItem="nlx-fN-QaC" secondAttribute="bottom" constant="61" id="CPg-Hj-5Ss"/>
                             <constraint firstItem="7Ua-kh-8Z6" firstAttribute="top" secondItem="KkG-t7-cjs" secondAttribute="bottom" constant="20" id="G2H-QN-YPj"/>
                             <constraint firstAttribute="leadingMargin" secondItem="Kxv-3J-aaD" secondAttribute="leading" id="GTD-sY-byj"/>
                             <constraint firstAttribute="leadingMargin" secondItem="KkG-t7-cjs" secondAttribute="leading" id="JdV-ic-nJ0"/>
+                            <constraint firstItem="nlx-fN-QaC" firstAttribute="centerY" secondItem="Kxv-3J-aaD" secondAttribute="centerY" id="OEi-1B-sbE"/>
                             <constraint firstAttribute="trailingMargin" secondItem="KkG-t7-cjs" secondAttribute="trailing" constant="113" id="T6B-Jx-XAp"/>
-                            <constraint firstItem="nlx-fN-QaC" firstAttribute="centerY" secondItem="Kxv-3J-aaD" secondAttribute="centerY" id="VNq-aB-v0a"/>
-                            <constraint firstItem="nlx-fN-QaC" firstAttribute="top" secondItem="PmL-hQ-6g8" secondAttribute="bottom" constant="20" id="ZRG-IA-5VC"/>
+                            <constraint firstItem="aG0-Lz-1XL" firstAttribute="centerY" secondItem="nlx-fN-QaC" secondAttribute="centerY" id="YkF-GZ-qAx"/>
                             <constraint firstItem="7hx-WB-At3" firstAttribute="top" secondItem="tdp-En-eaZ" secondAttribute="bottom" constant="24" id="apS-mm-EJR"/>
+                            <constraint firstItem="nlx-fN-QaC" firstAttribute="centerX" secondItem="7LR-H9-ta2" secondAttribute="centerX" id="d7j-Le-bMc"/>
                             <constraint firstItem="7hx-WB-At3" firstAttribute="leading" secondItem="KkG-t7-cjs" secondAttribute="trailing" constant="67" id="f2m-ca-5DA">
                                 <variation key="heightClass=regular" constant="67"/>
                             </constraint>
                             <constraint firstItem="7hx-WB-At3" firstAttribute="centerY" secondItem="KkG-t7-cjs" secondAttribute="centerY" id="hRf-9H-VzE"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="nlx-fN-QaC" secondAttribute="trailing" constant="20" id="iE0-Ag-eAP"/>
                             <constraint firstAttribute="trailingMargin" secondItem="tdp-En-eaZ" secondAttribute="trailing" constant="2" id="ir2-bN-B5p"/>
+                            <constraint firstItem="Kxv-3J-aaD" firstAttribute="top" secondItem="PmL-hQ-6g8" secondAttribute="bottom" constant="16" id="l7x-hT-W1g"/>
                             <constraint firstItem="7hx-WB-At3" firstAttribute="top" secondItem="TkB-uh-vrg" secondAttribute="bottom" constant="71" id="lDy-4K-KNN"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="aG0-Lz-1XL" secondAttribute="trailing" id="mRa-8S-rEZ"/>
                             <constraint firstAttribute="leadingMargin" secondItem="TkB-uh-vrg" secondAttribute="leading" id="mey-x1-gjJ"/>
+                            <constraint firstItem="TkB-uh-vrg" firstAttribute="top" secondItem="Kxv-3J-aaD" secondAttribute="bottom" constant="56" id="vpm-iM-vUh"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
@@ -256,6 +265,7 @@
                                 <exclude reference="7hx-WB-At3"/>
                                 <exclude reference="TkB-uh-vrg"/>
                                 <exclude reference="Kxv-3J-aaD"/>
+                                <exclude reference="aG0-Lz-1XL"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="G2H-QN-YPj"/>
@@ -266,13 +276,15 @@
                                 <exclude reference="hRf-9H-VzE"/>
                                 <exclude reference="lDy-4K-KNN"/>
                                 <exclude reference="GTD-sY-byj"/>
-                                <exclude reference="VNq-aB-v0a"/>
-                                <exclude reference="ZRG-IA-5VC"/>
-                                <exclude reference="iE0-Ag-eAP"/>
+                                <exclude reference="l7x-hT-W1g"/>
+                                <exclude reference="YkF-GZ-qAx"/>
+                                <exclude reference="mRa-8S-rEZ"/>
+                                <exclude reference="OEi-1B-sbE"/>
+                                <exclude reference="d7j-Le-bMc"/>
                                 <exclude reference="ir2-bN-B5p"/>
                                 <exclude reference="0hg-w1-tkF"/>
-                                <exclude reference="CPg-Hj-5Ss"/>
                                 <exclude reference="mey-x1-gjJ"/>
+                                <exclude reference="vpm-iM-vUh"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -283,6 +295,7 @@
                                 <include reference="7hx-WB-At3"/>
                                 <include reference="TkB-uh-vrg"/>
                                 <include reference="Kxv-3J-aaD"/>
+                                <include reference="aG0-Lz-1XL"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="G2H-QN-YPj"/>
@@ -293,13 +306,15 @@
                                 <include reference="hRf-9H-VzE"/>
                                 <include reference="lDy-4K-KNN"/>
                                 <include reference="GTD-sY-byj"/>
-                                <include reference="VNq-aB-v0a"/>
-                                <include reference="ZRG-IA-5VC"/>
-                                <include reference="iE0-Ag-eAP"/>
+                                <include reference="l7x-hT-W1g"/>
+                                <include reference="YkF-GZ-qAx"/>
+                                <include reference="mRa-8S-rEZ"/>
+                                <include reference="OEi-1B-sbE"/>
+                                <include reference="d7j-Le-bMc"/>
                                 <include reference="ir2-bN-B5p"/>
                                 <include reference="0hg-w1-tkF"/>
-                                <include reference="CPg-Hj-5Ss"/>
                                 <include reference="mey-x1-gjJ"/>
+                                <include reference="vpm-iM-vUh"/>
                             </mask>
                         </variation>
                     </view>

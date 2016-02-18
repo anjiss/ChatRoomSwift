@@ -12,7 +12,12 @@ import Darwin.C
 
 class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var testLabel: UILabel!
-    var timer = NSTimer()
+    //var timer = NSTimer()
+    @IBAction func updateBut(sender: AnyObject) {
+        if !is_server{
+            self.listenJoin()
+        }
+    }
     @IBAction func leaveRoom(sender: AnyObject) {
         if is_server {
         
@@ -25,6 +30,7 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
                 print(errmsg)
             }
             self.performSegueWithIdentifier("leave_room", sender: self)
+            client.close()
         }
     }
 
@@ -43,14 +49,9 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
             }
         } else {
             for ip in users_ips {
-                let client:TCPClient = TCPClient(addr: ip, port: 420)
-                var (success,errmsg)=client.connect(timeout: 5)
-                if success{
-                    client.send(str: "/msg " + localName + ": " + chatMessage.text! + "\n")
-                }else{
-                    print(errmsg)
-                }
-
+                print(ip)
+                //let client = self.server.accept()
+                //client!.send(str: "/msg " + localName + ": " + chatMessage.text! + "\n")
             }
         
         }
@@ -60,6 +61,7 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var chatLabel: UILabel!
     var server: TCPServer!
+    var client: TCPClient!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -67,16 +69,15 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
         ChatText.text = ""
         ChatText.userInteractionEnabled = true
         ChatText.editable = false
-        if true {
+        if is_server {
             testLabel.text = "1 users"
             let queueJoin = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             dispatch_async(queueJoin) {
                 self.listenJoin()
             }
-            //let queueListen = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-            //dispatch_async(queueListen) {
-            //    self.listenMsg()
-            //}
+        } else {
+            testLabel.text = "1 users"
+            //timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "listenJoin", userInfo: nil, repeats: true)
         }
     }
     
@@ -86,24 +87,40 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     }
     
     func listenJoin () {
-        server = TCPServer(addr: localIP, port: 420)
-        var (success,msg)=server.listen()
-        print("successfully join chatroom!")
-        if success{
-            print("check 1")
-            while true {
-                var s = update()
-                dispatch_async(dispatch_get_main_queue()){
-                    if s != "" {
-                        self.ChatText.text = self.ChatText.text + s
-                    } else {
-                        self.testLabel.text = "\(server_userNames.count) users"
+        if is_server{
+            server = TCPServer(addr: localIP, port: 420)
+            var (success,msg) = server.listen()
+            if success{
+                print("successfully join chatroom!")
+                print("check 1")
+                while true {
+                    var s = update()
+                    dispatch_async(dispatch_get_main_queue()){
+                        if s != "" {
+                            self.ChatText.text = self.ChatText.text + s
+                        } else {
+                            self.testLabel.text = "\(server_userNames.count) users"
+                        }
                     }
+                    
                 }
-                
+                print("check 2")
             }
-            print("check 2")
+        } else {
+            if true{
+                print("successfully join chatroom!")
+                print("check 1")
+                var s = updateClient()
+                if s != "" {
+                    self.ChatText.text = s
+                } else {
+                    //
+                }
+
+                print("check 2")
+            }
         }
+        
     
     }
     func update() -> String {
@@ -113,7 +130,7 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
             print("newclient from:\(c.addr)[\(c.port)]")
             if var d=c.read(1024*10) {
                 let str = NSString(bytes: d, length: d.count, encoding: NSUTF8StringEncoding) as? String
-                //print(str)
+                print(str)
                 if str == "/join" {
                     if var d=c.read(1024*10) {
                         let str = NSString(bytes: d, length: d.count, encoding: NSUTF8StringEncoding) as? String
@@ -138,14 +155,54 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
                     let str_temp = str!.stringByReplacingOccurrencesOfString("/userleave ", withString: "")
                     server_userNames = server_userNames.filter {$0 != str_temp}
                     users_ips = users_ips.filter {$0 != c.addr}
+                } else if str!.rangeOfString("/ready") != nil {
+                    print(str)
+                    c.send(str: "/update " + self.ChatText.text)
                 }
             }
-        //self.testLabel.text = str
-        //c!.send(data: d!)
-            //c.close()
+            c.close()
         }
         return s
     }
+    func updateClient() -> String {
+        print("working...")
+        client = TCPClient(addr: serverIP, port: 420)
+        client.connect(timeout: 5)
+        client.send(str:"/ready" )
+        var s = ""
+        if var d=client.read(1024*10) {
+            let str = NSString(bytes: d, length: d.count, encoding: NSUTF8StringEncoding) as? String
+            print(str)
+            if str == "/join" {
+                if var d=client.read(1024*10) {
+                    let str = NSString(bytes: d, length: d.count, encoding: NSUTF8StringEncoding) as? String
+                    print(str)
+                    if str != "/cancel" {
+                        let userName = str!
+                        if !server_userNames.contains(userName) {
+                            server_userNames.append(userName)
+                            users_ips.append(client.addr)
+                            client.send(str: "/approved")
+                        } else {
+                            client.send(str: "/denied")
+                        }
+                    }
+                }
+            } else if str!.rangeOfString("/msg ") != nil {
+                s = str!.stringByReplacingOccurrencesOfString("/msg ", withString: "")
+                print(s)
+            } else if str == "/confrim" {
+                d=client.read(1024*10)!
+                let str = NSString(bytes: d, length: d.count, encoding: NSUTF8StringEncoding) as? String
+                print(str)
+            } else if str!.rangeOfString("/update ") != nil {
+                s = str!.stringByReplacingOccurrencesOfString("/update ", withString: "")
+            }
+        }
+        client.close()
+        return s
+    }
+
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         chatMessage.resignFirstResponder()
